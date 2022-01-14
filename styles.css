@@ -1,0 +1,38 @@
+.outer {
+  display: grid;
+  grid-template: 1fr / 1fr;
+  place-items: center;
+  position: absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 95vw;
+  max-width: 400px;
+  height: 80vh;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+}
+
+.outer > * {
+  grid-column: 1/1;
+  min-width: 400px;
+}
+
+.outer .top {
+  z-index: 1;
+}
+
+.outer .bot {
+  z-index: 2;
+}
+
+#original {
+  display: none;
+}
+
+#avatar {
+  
+}

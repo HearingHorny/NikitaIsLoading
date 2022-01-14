@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<!-- Based on this guide: https://redstapler.co/how-to-create-pixelated-image-with-javascript/ -->
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" type="text/css" href="styles.css" />
+  <link rel="stylesheet" type="text/css" href="css/rSlider.css">
+  <title>Nikita is Loading</title>
+</head>
+
+<body>
+  
+  <div class="outer">
+    <div class="top">
+    <input type="text" id="offsetSlider" class="slider"/>
+    </div>
+    <div class="bot" id="imageContainer">
+      <img id="original" src="img.jpg" />
+      <img id="avatar" src="img.jpg" />
+    </div>
+  </div>
+
+  <script src="js/rSlider.min.js"></script>
+  <script>
+    (function () {
+            'use strict';
+
+            window.onload = function() {                
+
+                var offsetSlider = new rSlider({
+                    target: '#offsetSlider',
+                    values: {min: 0, max: 100},
+                    range: false,
+                    step: 1,
+                    scale: false,
+                    labels: false,
+                    set: [33],
+                    tooltip: true,
+                    onChange: function (val) {
+                        pixelateImage(val);
+                    }
+                });
+            }
+    })();
+    
+    function pixelateImage(prct) {
+      let c = document.createElement("canvas");
+      ctx = c.getContext('2d');
+      
+      let originalImage = new Image();
+      originalImage.src = document.getElementById("original").src;
+      w = originalImage.width;
+      h = originalImage.height;
+
+      c.width = w;
+      c.height = h;
+      ctx.clearRect(0, 0, w, h);
+      ctx.drawImage(originalImage, 0, 0);
+
+      var pixelArr = ctx.getImageData(0, 0, w, h).data;
+      sample_size = 40;
+      offset = Math.ceil(prct * w / 100);
+      if (offset > w) {
+        offset = w;
+      }
+      
+      for (let y = 0; y < h; y += sample_size) {
+        for (let x = offset; x < w; x += sample_size) {
+          let p = (x + (y*w)) * 4;
+          ctx.fillStyle = "rgba(" + pixelArr[p] + "," + pixelArr[p + 1] + "," + pixelArr[p + 2] + "," + pixelArr[p + 3] + ")";
+          ctx.fillRect(x, y, sample_size, sample_size);
+        }
+      }
+
+      document.getElementById("avatar").setAttribute("src", c.toDataURL("image/jpeg"));
+
+    };
+
+  </script>
+</body>
+
+</html>
